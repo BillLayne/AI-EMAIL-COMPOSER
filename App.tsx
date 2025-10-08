@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback, ChangeEvent, useRef, useMemo } from 'react';
 import { EmailFormData, Template, ToastMessage, ToastType, CancellationData, Agent, Recipient, RecipientList } from './types';
 import { DOCUMENT_TYPES, TONE_OPTIONS, QUOTE_TYPE_OPTIONS, INITIAL_FORM_DATA, AGENCY_DETAILS, DEFAULT_TEMPLATES, RENEWAL_TYPE_OPTIONS, AGENTS, LATE_PAYMENT_CARRIERS, RECEIPT_PRODUCT_OPTIONS, RECIPIENT_LISTS_STORAGE_KEY } from './constants';
-import { generateSubjectLines, generatePreheaders, generateEmailBody, generateHomeQuoteProse, generateAutoQuoteProse, generateHeroImage, extractQuoteFromPdf, extractAutoQuoteFromPdf, extractRenewalInfoFromPdf, extractCancellationsFromPdf, generateRateChangeExplanation, generateVideo, generatePromptFromPdf, extractNewPolicyInfoFromPdf, extractReceiptInfoFromPdf, extractReceiptInfoFromText, extractChangeInfoFromText } from './services/geminiService';
+import { generateSubjectLines, generatePreheaders, generateEmailBody, generateHomeQuoteProse, generateAutoQuoteProse, generateHeroImage, extractQuoteFromPdf, extractAutoQuoteFromPdf, extractRenewalInfoFromPdf, extractCancellationsFromPdf, generateRateChangeExplanation, generateVideo, generatePromptFromPdf, extractNewPolicyInfoFromPdf, extractReceiptInfoFromPdf, extractReceiptInfoFromText, extractChangeInfoFromText, generateSmsText } from './services/geminiService';
 import { assembleEmailHtml } from './services/emailService';
 import { assembleHomeQuoteHtml } from './services/homeQuoteTemplate';
 import { assembleAutoQuoteHtml } from './services/autoQuoteTemplate';
@@ -81,6 +81,7 @@ const getSubjectForDocumentType = (docType: string, policyHolder: string = '', c
       case 'AI Prompt': return `Important Update Regarding Your Policy from ${agency}${ph}`;
       case 'Custom Message': return `Message from ${agency}${ph}`;
       case 'Promotional / Newsletter': return `News & Offers from ${agency}`;
+      case 'SMS Text Message': return `Text Message from ${agency}`;
       default: return '';
     }
 };
@@ -593,6 +594,7 @@ export default function App() {
       case 'AI Prompt': `An important update regarding your policy is inside.`;
       case 'Custom Message': return `A message from Bill Layne Insurance regarding your account.`;
       case 'Promotional / Newsletter': return `See our latest updates, tips, and special offers.`;
+      case 'SMS Text Message': return `Generate professional text messages for your customers.`;
       default: return `Important information from Bill Layne Insurance Agency.`;
     }
   }, [formData.documentType, formData.policyHolder, formData.emailPreheader]);
@@ -1895,7 +1897,76 @@ export default function App() {
                     <textarea id="customPrompt" value={formData.customPrompt} onChange={handleFormChange} rows={4} placeholder="e.g., Announce our new referral program. Clients get a $25 gift card for each referral..." className="w-full p-2 border rounded-md bg-white dark:bg-gray-600 dark:border-gray-500" disabled={!!loadingMessage}></textarea>
                 </div>
             )}
-            
+
+            {formData.documentType === 'SMS Text Message' && (
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg space-y-4 border-2 border-blue-300 dark:border-blue-700">
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">📱 SMS Text Message Generator</h3>
+                    <FormField label="Your Text Idea" id="smsTextIdea">
+                        <textarea
+                            id="smsTextIdea"
+                            value={formData.smsTextIdea}
+                            onChange={handleFormChange}
+                            rows={3}
+                            placeholder="e.g., Remind customer about policy renewal next month, ask if they need any changes..."
+                            className="w-full p-2 border rounded-md bg-white dark:bg-gray-600 dark:border-gray-500"
+                            disabled={!!loadingMessage}
+                        ></textarea>
+                    </FormField>
+                    <Button
+                        onClick={async () => {
+                            if (!formData.smsTextIdea.trim()) {
+                                showToast('Please enter your text message idea first.', 'warning');
+                                return;
+                            }
+                            setLoadingMessage('Generating text message...');
+                            try {
+                                const agent = AGENTS.find(a => a.id === formData.agentId) || AGENTS[0];
+                                const generatedText = await generateSmsText(formData.smsTextIdea, agent.name);
+                                setFormData(prev => ({ ...prev, smsGeneratedText: generatedText }));
+                                showToast('Text message generated!', 'success');
+                            } catch (error) {
+                                console.error('Error generating SMS:', error);
+                                showToast('Failed to generate text message.', 'error');
+                            } finally {
+                                setLoadingMessage(null);
+                            }
+                        }}
+                        disabled={!!loadingMessage}
+                        variant="primary"
+                    >
+                        <IconWand /> Generate Text Message
+                    </Button>
+
+                    {formData.smsGeneratedText && (
+                        <div className="space-y-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Generated Text Message</label>
+                            <div className="relative">
+                                <div className="w-full p-3 border-2 border-blue-400 dark:border-blue-600 rounded-lg bg-white dark:bg-gray-800 whitespace-pre-wrap">
+                                    {formData.smsGeneratedText}
+                                </div>
+                                <Button
+                                    onClick={async () => {
+                                        try {
+                                            await navigator.clipboard.writeText(formData.smsGeneratedText || '');
+                                            showToast('Text copied to clipboard!', 'success');
+                                        } catch (error) {
+                                            showToast('Failed to copy text.', 'error');
+                                        }
+                                    }}
+                                    variant="primary"
+                                    className="mt-2"
+                                >
+                                    📋 Copy Text Message
+                                </Button>
+                            </div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Character count: {formData.smsGeneratedText.length}
+                            </p>
+                        </div>
+                    )}
+                </div>
+            )}
+
             <details className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border dark:border-gray-700">
                 <summary className="font-semibold cursor-pointer">Optional: Hero Image</summary>
                 <div className="mt-4 divide-y dark:divide-gray-600"><div className="space-y-4 pb-4"><FormField label="Image URL" id="heroUrl"><input id="heroUrl" type="text" placeholder="https://..." value={formData.heroUrl} onChange={handleFormChange} className="w-full p-2 border rounded-md dark:bg-gray-600 dark:border-gray-500" /></FormField><FormField label="Upload Image" id="heroFile"><input id="heroFile" type="file" accept="image/*" onChange={handleHeroFileChange} className="w-full text-sm" /></FormField>{formData.heroUrl && <img src={formData.heroUrl} alt="Hero preview" className="rounded-md max-h-40 w-auto" />}</div><div className="pt-4 space-y-2"><h4 className="text-sm font-semibold text-gray-600 dark:text-gray-300">Generate with AI</h4><FormField label="Image Prompt" id="imageGenPrompt"><textarea id="imageGenPrompt" value={imageGenPrompt} onChange={(e) => setImageGenPrompt(e.target.value)} rows={2} placeholder="e.g., A family smiling in front of a new car" className="w-full p-2 border rounded-md bg-white dark:bg-gray-600 dark:border-gray-500"></textarea></FormField><Button onClick={handleGenerateImage} disabled={!!loadingMessage} variant="ghost"><IconWand /> Generate Image</Button><p className="text-xs text-gray-500 dark:text-gray-400 mt-2"><strong>Note:</strong> AI-generated images are embedded directly and significantly increase email size, which may cause Gmail to clip it.</p></div></div>

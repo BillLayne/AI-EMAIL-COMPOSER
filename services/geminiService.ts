@@ -958,3 +958,33 @@ export const generateOpportunities = async (formData: EmailFormData): Promise<Op
           return "We understand that seeing a premium increase can be frustrating. Rates across the industry are being adjusted to account for factors like the rising costs of labor and materials for repairs. We've ensured your policy continues to provide the best protection for your investment. Please feel free to call us if you'd like to review your coverage options.";
       }
   };
+
+export const generateSmsText = async (idea: string, agentName: string = 'Bill Layne Insurance'): Promise<string> => {
+    try {
+        const response = await ai.models.generateContent({
+            model,
+            contents: `
+                Generate a friendly, professional SMS text message based on this idea:
+
+                "${idea}"
+
+                Requirements:
+                - Keep it concise and suitable for SMS (160-300 characters ideal)
+                - Include relevant emojis to make it engaging
+                - Professional but warm tone
+                - Sign off from: ${agentName}
+                - Make it sound natural and conversational
+                - Perfect grammar and spelling
+            `,
+            config: {
+                systemInstruction: `You are an expert at writing engaging, professional SMS text messages for an insurance agency.
+                Create messages that are friendly, clear, and include appropriate emojis.
+                Keep the tone warm and professional.`
+            }
+        });
+        return response.text.trim();
+    } catch (error) {
+        console.error("Error generating SMS text:", error);
+        return "Hi! Thanks for being a valued customer. Please reach out if you need anything. 😊";
+    }
+};

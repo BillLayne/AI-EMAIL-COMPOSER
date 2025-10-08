@@ -104,6 +104,10 @@ export interface EmailFormData {
 
   // AI Opportunities
   selectedOpportunityPrompt?: string;
+
+  // SMS Text Message fields
+  smsTextIdea: string;
+  smsGeneratedText?: string;
 }
 
 export interface CancellationData {

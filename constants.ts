@@ -120,6 +120,7 @@ export const DOCUMENT_TYPES = [
   "General Documentation",
   "Custom Message",
   "Promotional / Newsletter",
+  "SMS Text Message",
 ];
 
 export const TONE_OPTIONS: EmailFormData['tone'][] = ["Warm", "Direct", "Short"];
@@ -221,6 +222,10 @@ export const INITIAL_FORM_DATA: EmailFormData = {
 
   // AI Opportunities
   selectedOpportunityPrompt: '',
+
+  // SMS Text Message fields
+  smsTextIdea: '',
+  smsGeneratedText: '',
 };
 
 export const DEFAULT_TEMPLATES: Template[] = [
