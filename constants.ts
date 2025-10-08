@@ -4,7 +4,7 @@ import { EmailFormData, Template, Agent } from './types';
 export const AGENCY_DETAILS = {
   name: "Bill Layne Insurance Agency",
   shortName: "Bill Layne Ins",
-  logoUrl: "https://i.imgur.com/uVVShPM.png",
+  logoUrl: "https://i.imgur.com/Z5MxmKE.png",
   address: "1283 N Bridge St, Elkin, NC 28621",
   phone: "336-835-1993",
   email: "Bill@NCAutoandHome.com",
@@ -34,6 +34,10 @@ export const LATE_PAYMENT_CARRIERS = [
   { id: 'foremost', name: 'Foremost', paymentLink: 'https://www.myforemostaccount.com/fmcss/makeapayment', phone: '800-527-3905' },
   { id: 'nc_grange', name: 'NC Grange', paymentLink: 'https://ncgrangemutual.ncgrangemutual.com/payments/', phone: '800-662-7777' },
   { id: 'alamance_farmers', name: 'Alamance Farmers', paymentLink: 'https://alamance.britecorepro.com/login/securePayment', phone: '336-226-7959' },
+  { id: 'travelers', name: 'Travelers', paymentLink: 'https://www.travelers.com/account/login', phone: '800-842-5075' },
+  { id: 'hagerty', name: 'Hagerty', paymentLink: 'https://www.hagerty.com/account/login', phone: '877-922-9701' },
+  { id: 'jsa', name: 'JSA', paymentLink: '', phone: '' },
+  { id: 'ncjua', name: 'NCJUA', paymentLink: 'https://www.ncjua.com/', phone: '919-783-9790' },
 ];
 
 export const CARRIER_CONTACTS: { [key: string]: any } = {
@@ -44,17 +48,27 @@ export const CARRIER_CONTACTS: { [key: string]: any } = {
     'foremost': { id: 'foremost', name: 'Foremost', paymentLink: 'https://www.myforemostaccount.com/fmcss/makeapayment', servicePhone: '800-527-3905', claimsPhone: '800-527-3907' },
     'grange': { id: 'nc_grange', name: 'NC Grange', paymentLink: 'https://ncgrangemutual.ncgrangemutual.com/payments/', servicePhone: '800-662-7777', claimsPhone: '877-444-6742' },
     'alamance': { id: 'alamance_farmers', name: 'Alamance Farmers', paymentLink: 'https://alamance.britecorepro.com/login/securePayment', servicePhone: '336-226-7959', claimsPhone: '336-226-7959' },
+    'travelers': { id: 'travelers', name: 'Travelers', paymentLink: 'https://www.travelers.com/account/login', servicePhone: '800-842-5075', claimsPhone: '800-252-4633' },
+    'hagerty': { id: 'hagerty', name: 'Hagerty', paymentLink: 'https://www.hagerty.com/account/login', servicePhone: '877-922-9701', claimsPhone: '877-922-9701' },
+    'jsa': { id: 'jsa', name: 'JSA', paymentLink: '', servicePhone: '', claimsPhone: '' },
+    'ncjua': { id: 'ncjua', name: 'NCJUA', paymentLink: 'https://www.ncjua.com/', servicePhone: '919-783-9790', claimsPhone: '919-783-9790' },
 };
 
 
 export const CARRIER_LOGOS: { [key: string]: string } = {
-  'foremost': 'https://i.imgur.com/rHIo4r5.jpg',
-  'alamance': 'https://i.imgur.com/KhV6zop.png',
-  'grange': 'https://i.imgur.com/Fesnkng.png',
-  'progressive': 'https://i.imgur.com/7N1vfo0.png',
-  'national general': 'https://i.imgur.com/HF8oPAF.png',
-  'nationwide': 'https://i.imgur.com/Mv5V7tV.png',
-  'dairyland': 'https://i.imgur.com/gS3703v.png' // Example Dairyland logo
+  'alamance': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Alamance%20Logo.webp?raw=true',
+  'dairyland': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Dairyland%20Logo.webp?raw=true',
+  'foremost': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Foremost.webp?raw=true',
+  'hagerty': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Hagerty.webp?raw=true',
+  'jsa': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/JSA%20LOGO.png?raw=true',
+  'grange': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/NC%20Grange%20Logo.webp?raw=true',
+  'nc grange': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/NC%20Grange%20Logo.webp?raw=true',
+  'national general': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/National%20General%20Insurance%20Logo.webp?raw=true',
+  'nationwide': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Nationwide%20Logo%20(1).webp?raw=true',
+  'progressive': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Progressive%20Logo.webp?raw=true',
+  'travelers': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/Travelers%20Logo.webp?raw=true',
+  'ncjua': 'https://github.com/BillLayne/bill-layne-images/blob/main/logos/ncjua%20LOGO.png?raw=true',
+  'default': 'https://i.imgur.com/Z5MxmKE.png' // Bill Layne Insurance logo
 };
 
 export const CARRIER_THEMES: { [key: string]: any } = {
@@ -65,6 +79,10 @@ export const CARRIER_THEMES: { [key: string]: any } = {
   'national general': { primary: '#0078C8', accent: '#5CB941', textOnPrimary: '#FFFFFF', textOnAccent: '#FFFFFF', cardBorder: '#5CB941' },
   'nationwide': { primary: '#00659E', accent: '#E31B23', textOnPrimary: '#FFFFFF', textOnAccent: '#FFFFFF', cardBorder: '#00659E' },
   'dairyland': { primary: '#006699', accent: '#FFCC00', textOnPrimary: '#FFFFFF', textOnAccent: '#006699', cardBorder: '#006699' },
+  'travelers': { primary: '#ED1B2E', accent: '#ED1B2E', textOnPrimary: '#FFFFFF', textOnAccent: '#FFFFFF', cardBorder: '#ED1B2E' },
+  'hagerty': { primary: '#002855', accent: '#B8860B', textOnPrimary: '#FFFFFF', textOnAccent: '#FFFFFF', cardBorder: '#B8860B' },
+  'jsa': { primary: '#003366', accent: '#FFC300', textOnPrimary: '#FFFFFF', textOnAccent: '#003366', cardBorder: '#FFC300' },
+  'ncjua': { primary: '#003366', accent: '#FFC300', textOnPrimary: '#FFFFFF', textOnAccent: '#003366', cardBorder: '#FFC300' },
   'default': { primary: '#003366', accent: '#FFC300', textOnPrimary: '#FFFFFF', textOnAccent: '#003366', cardBorder: '#FFC300' },
 };
 
@@ -251,9 +269,36 @@ export const DEFAULT_TEMPLATES: Template[] = [
       customPrompt: 'Write a short newsletter about the importance of reviewing insurance coverage annually. Mention that our team is available for a free policy review.',
       tone: 'Warm',
       heroAlt: 'Bill Layne Insurance Agency logo',
-      heroUrl: 'https://i.imgur.com/uVVShPM.png'
+      heroUrl: 'https://i.imgur.com/Z5MxmKE.png'
     }
   }
 ];
 
 export const RECIPIENT_LISTS_STORAGE_KEY = 'billLayneAiRecipientLists_v1';
+
+/**
+ * Get the logo URL for a given carrier name.
+ * If carrier is not found, returns the default Bill Layne Insurance logo.
+ * @param carrierName - The name of the carrier (case-insensitive)
+ * @returns The logo URL
+ */
+export function getCarrierLogo(carrierName: string): string {
+  if (!carrierName) return CARRIER_LOGOS['default'];
+
+  const normalizedName = carrierName.toLowerCase().trim();
+
+  // Check for exact match first
+  if (CARRIER_LOGOS[normalizedName]) {
+    return CARRIER_LOGOS[normalizedName];
+  }
+
+  // Check for partial matches
+  for (const [key, url] of Object.entries(CARRIER_LOGOS)) {
+    if (normalizedName.includes(key) || key.includes(normalizedName)) {
+      return url;
+    }
+  }
+
+  // Return default logo if no match found
+  return CARRIER_LOGOS['default'];
+}
